@@ -9,7 +9,7 @@ using CFlat.Utility;
 namespace CFlat.Bridge.Tcp.Action
 {
     class IocpAcceptAction : IocpActionBase
-    {
+    { 
         private Socket listenerSocket { get; set; }
         private IPEndPoint listenerEndPoint { get; set; }
         private bool continousAccpet { get; set; }
