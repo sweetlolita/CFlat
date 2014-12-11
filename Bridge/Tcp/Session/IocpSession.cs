@@ -82,8 +82,11 @@ namespace CFlat.Bridge.Tcp.Session
             }
             else
             {
-                Logger.debug("IocpSession: session {0} receives {1} bytes of data. string data: {2}",
-                    sessionId, descriptor.desLength, System.Text.Encoding.Default.GetString(descriptor.des, 0, descriptor.desLength));
+                Logger.debug("IocpSession: session {0} receives {1} bytes of data. \n hex data: {2}, \n ascii string data: {3}",
+                    sessionId, 
+                    descriptor.desLength, 
+                    BitConverter.ToString(descriptor.des, 0, descriptor.desLength),
+                    System.Text.Encoding.ASCII.GetString(descriptor.des, 0, descriptor.desLength));
                 digest(descriptor);
             }
         }

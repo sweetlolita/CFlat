@@ -39,12 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonEntity\CfpPlayer.cs" />
+    <Compile Include="CommonEntity\CfpPlayground.cs" />
     <Compile Include="CommonEntity\CfpException.cs" />
     <Compile Include="EndPoint\CfpClient.cs" />
+    <Compile Include="EndPoint\CfpClientInterface.cs" />
     <Compile Include="EndPoint\CfpServer.cs" />
+    <Compile Include="EndPoint\CfpServerInterface.cs" />
     <Compile Include="Gutter\CfpGutter.cs" />
-    <Compile Include="Presentation\PacketDataUnitBase.cs" />
-    <Compile Include="Presentation\PacketDataUnitParser.cs" />
+    <Compile Include="Gutter\CfpGutterObserver.cs" />
+    <Compile Include="PacketPresentation\PacketDataUnitBase.cs" />
+    <Compile Include="PacketPresentation\PacketDataUnitLineFlag.cs" />
+    <Compile Include="PacketPresentation\PacketDataUnitParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

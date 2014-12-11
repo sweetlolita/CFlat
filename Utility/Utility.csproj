@@ -47,8 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activity\ActivityBase.cs" />
+    <Compile Include="Activity\Activity.cs" />
+    <Compile Include="Activity\ActivityFactory.cs" />
+    <Compile Include="Activity\ActivityFactoryRegistrationItem.cs" />
     <Compile Include="Activity\ActivityMap.cs" />
+    <Compile Include="Activity\PlayerBase.cs" />
+    <Compile Include="Activity\PlaygroundBase.cs" />
     <Compile Include="DataStructure\BiMap.cs" />
     <Compile Include="DataStructure\PriorityQueue.cs" />
     <Compile Include="Descriptor\Descriptor.cs" />
@@ -62,13 +66,15 @@
     <Compile Include="Polling\SingleListServer.cs" />
     <Compile Include="Polling\SingleListServerInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serializing\AppConfigHelper.cs" />
+    <Compile Include="Serializing\ConfigParser.cs" />
     <Compile Include="Serializing\BytesHelper.cs" />
     <Compile Include="Serializing\Jsonable.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Config\log4net.config" />
+    <None Include="Config\log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

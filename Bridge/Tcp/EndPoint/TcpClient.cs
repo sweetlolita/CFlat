@@ -42,11 +42,6 @@ namespace CFlat.Bridge.Tcp.EndPoint
             Logger.debug("TcpClient: stop.");
         }
 
-        public void send(string buffer)
-        {
-            session.send(System.Text.Encoding.ASCII.GetBytes(buffer), 0, buffer.Length);
-        }
-
         public void send(byte[] buffer, int offset, int count)
         {
             session.send(buffer, offset, count);

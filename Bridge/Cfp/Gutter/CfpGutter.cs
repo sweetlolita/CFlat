@@ -4,30 +4,30 @@ using System.Linq;
 using System.Text;
 using CFlat.Bridge.Tcp.EndPoint;
 using CFlat.Utility;
-using CFlat.Bridge.Cfp.Presentation;
+using CFlat.Bridge.Cfp.PacketPresentation;
+using CFlat.Bridge.Cfp.CommonEntity;
 
 namespace CFlat.Bridge.Cfp.Gutter
 {
-    public class CfpGutter : TcpEndPointObserver
+    public class CfpGutter : ActivityFactory, TcpEndPointObserver
     {
-        private ActivityMap activityMap { get; set; }
-        protected CfpGutter()
-        {
-            activityMap = new ActivityMap();
-        }
+        private CfpGutterObserver cfpGutterObserver { get; set; }
 
-        public void registerActivity(string verb, ActivityBase activity)
+        private delegate void TcpDataAsyncHandlerDelegate(Guid sessionId, Descriptor descriptor);
+        protected CfpGutter(CfpGutterObserver cfpGutterObserver)
         {
-            activityMap.put(verb, activity);
-        }
-
-        public void unregisterActivity(string verb)
-        {
-            activityMap.remove(verb);
+            this.cfpGutterObserver = cfpGutterObserver;
         }
 
         //data from transport layer
         void TcpEndPointObserver.onTcpData(Guid sessionId, Descriptor descriptor)
+        {
+            TcpDataAsyncHandlerDelegate delegateMethod = new TcpDataAsyncHandlerDelegate(this.tcpDataAsyncHandler);
+            DescriptorBuffer copiedBuffer = DescriptorBuffer.create(descriptor);
+            delegateMethod.BeginInvoke(sessionId, copiedBuffer, null, null);
+        }
+
+        private void tcpDataAsyncHandler(Guid sessionId, Descriptor descriptor)
         {
             try
             {
@@ -36,16 +36,23 @@ namespace CFlat.Bridge.Cfp.Gutter
                 PacketDataUnitParser packetDataUnitParser = new PacketDataUnitParser(descriptor);
                 while (packetDataUnitParser.parseIfHasNext(out packetDataUnit))
                 {
-                    string verb = packetDataUnit.verb;
-                    ActivityBase activity = activityMap.search(verb);
+                    Activity activity = createActivityFromJson(packetDataUnit.jsonPayload);
+                    
                     if (activity != null)
                     {
-                        Logger.debug("a {0} action is delivered to its handler.", verb);
-                        activity.act(new List<object> { sessionId, packetDataUnit.jsonPayload });
+                        CfpPlayer player = activity.player as CfpPlayer;
+                        player.sessionId = sessionId;
+
+                        Logger.debug("a {0} action is spawn.",
+                            activity.playground.verb);
+                        if(cfpGutterObserver != null)
+                        {
+                            cfpGutterObserver.onCfpActivity(activity);
+                        }
                     }
                     else
                     {
-                        Logger.error("cannot find handler to deal with {0} action.", verb);
+                        Logger.error("cannot find handler : {0}", packetDataUnit.jsonPayload);
                     }
                 }
             }
@@ -53,22 +60,30 @@ namespace CFlat.Bridge.Cfp.Gutter
             {
                 Logger.error("CfpGutter: skip this tcp data for reason: {0}", ex.Message);
             }
-
         }
 
         void TcpEndPointObserver.onTcpConnected(Guid sessionId)
         {
-            throw new NotImplementedException();
+            if (cfpGutterObserver != null)
+            {
+                cfpGutterObserver.onCfpConnected(sessionId);
+            }
         }
 
         void TcpEndPointObserver.onTcpDisconnected(Guid sessionId)
         {
-            throw new NotImplementedException();
+            if (cfpGutterObserver != null)
+            {
+                cfpGutterObserver.onCfpDisconnected(sessionId);
+            }
         }
 
         void TcpEndPointObserver.onTcpError(Guid sessionId, string errorMessage)
         {
-            throw new NotImplementedException();
+            if (cfpGutterObserver != null)
+            {
+                cfpGutterObserver.onCfpError(sessionId, errorMessage);
+            }
         }
     }
 }

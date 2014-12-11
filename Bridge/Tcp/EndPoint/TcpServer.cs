@@ -92,7 +92,7 @@ namespace CFlat.Bridge.Tcp.EndPoint
             }
         }
 
-        public void sendData(Guid sessionId, byte[] data, int offset, int count)
+        public void send(Guid sessionId, byte[] data, int offset, int count)
         {
             IocpSession dstSession = runningSessions.search(sessionId);
             dstSession.send(data, offset, count);

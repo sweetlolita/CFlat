@@ -7,39 +7,41 @@ namespace CFlat.Utility
 {
     public class ActivityMap
     {
-        private Dictionary<string, ActivityBase> activityDict { get; set; }
+        private Dictionary<string, ActivityFactoryRegistrationItem> activityDict { get; set; }
         private object dictLocker { get; set; }
         public ActivityMap()
         {
-            activityDict = new Dictionary<string, ActivityBase>();
+            activityDict = new Dictionary<string, ActivityFactoryRegistrationItem>();
             dictLocker = new object();
         }
 
-        public void put(string verb, ActivityBase registeredActivity)
+        internal void put(string verb, ActivityFactoryRegistrationItem item)
         {
+
             lock (dictLocker)
             {
                 if (activityDict.ContainsKey(verb))
                 {
-                    activityDict[verb] = registeredActivity;
+                    activityDict[verb] = item;
                     Logger.debug("ActivityMap: activity of verb {0} has been updated.",
                         verb);
                 }
                 else
                 {
-                    activityDict.Add(verb, registeredActivity);
+                    activityDict.Add(verb, item);
                     Logger.debug("ActivityMap: activity of verb {0} has been added.",
                         verb);
                 }
             }
+  
         }
 
-        public ActivityBase search(string verb)
+        internal ActivityFactoryRegistrationItem search(string verb)
         {
-            ActivityBase result = null;
+            ActivityFactoryRegistrationItem result = null;
             if (activityDict.TryGetValue(verb, out result) == false)
             {
-                Logger.debug("ActivityMap: no activity for verb {0}.", verb);
+                Logger.debug("ActivityMap: no Player for verb {0}.", verb);
             }
             return result;
         }

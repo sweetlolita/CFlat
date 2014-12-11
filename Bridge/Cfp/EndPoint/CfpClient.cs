@@ -4,17 +4,19 @@ using System.Linq;
 using System.Text;
 using CFlat.Bridge.Cfp.Gutter;
 using CFlat.Bridge.Tcp.EndPoint;
+using CFlat.Bridge.Cfp.PacketPresentation;
 using CFlat.Utility;
 
 namespace CFlat.Bridge.Cfp.EndPoint
 {
-    public class CfpClient : CfpGutter
+    public class CfpClient : CfpGutter, CfpClientInterface
     {
         private TcpClient tcpClient { get; set; }
         public CfpClient(string clientIpAddress, int clientPort,
-            string serverIpAddress, int serverPort)
+            string serverIpAddress, int serverPort, CfpGutterObserver cfpGutterObserver) : base(cfpGutterObserver)
         {
             tcpClient = new TcpClient(clientIpAddress, clientPort, serverIpAddress, serverPort, this);
+          
         }
 
         public void start()
@@ -29,6 +31,14 @@ namespace CFlat.Bridge.Cfp.EndPoint
             Logger.debug("CfpClient: stopping...");
             tcpClient.stop();
             Logger.debug("CfpClient: stop.");
+        }
+
+        public void send(PlaygroundBase playgroundBase)
+        {
+            PacketDataUnitBase packetDataUnit = new PacketDataUnitBase();
+            packetDataUnit.jsonPayload = playgroundBase.toJson();
+            byte[] rawBytes = packetDataUnit.rawBytes();
+            tcpClient.send(rawBytes, 0, rawBytes.Length);
         }
     }
 }
