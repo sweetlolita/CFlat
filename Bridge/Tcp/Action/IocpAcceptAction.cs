@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using CFlat.Utility;
+using CFlat.Bridge.Tcp.CommonEntity;
 
 namespace CFlat.Bridge.Tcp.Action
 {
@@ -24,13 +25,18 @@ namespace CFlat.Bridge.Tcp.Action
             
         }
 
+        
+
         protected sealed override void onIocpEvent(bool isSuccess, out bool continousAsyncCall)
         {
             if (isSuccess)
             {
-                if (iocpEventArgs.AcceptSocket.Connected)
+                Socket acceptedSocket = iocpEventArgs.AcceptSocket;
+                if (acceptedSocket.Connected)
                 {
-                    onAcceptedAction(iocpEventArgs.AcceptSocket);
+
+                    SocketOption.enableKeepAlive(acceptedSocket);
+                    onAcceptedAction(acceptedSocket);
                 }
             }
             // Socket must be cleared since the context object is being reused.

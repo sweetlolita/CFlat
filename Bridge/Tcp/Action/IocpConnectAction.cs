@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
+using CFlat.Bridge.Tcp.CommonEntity;
 
 namespace CFlat.Bridge.Tcp.Action
 {
@@ -29,6 +30,7 @@ namespace CFlat.Bridge.Tcp.Action
         {
             if(isSuccess)
             {
+                SocketOption.enableKeepAlive(clientSocket);
                 onConnectedAction(clientSocket);
             }
             continousAsyncCall = false;
@@ -37,6 +39,7 @@ namespace CFlat.Bridge.Tcp.Action
         public void connect()
         {
             clientSocket = new Socket(clientEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            
             iocpAsyncDelegate = new IocpAsyncDelegate(clientSocket.ConnectAsync);
             iocpEventArgs.RemoteEndPoint = serverEndPoint;
             iocpOperation();

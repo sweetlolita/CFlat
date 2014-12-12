@@ -47,6 +47,7 @@
     <Compile Include="CommonEntity\IocpException.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CommonEntity\SocketOption.cs" />
     <Compile Include="EndPoint\TcpClient.cs" />
     <Compile Include="EndPoint\TcpEndPointObserver.cs" />
     <Compile Include="EndPoint\TcpServer.cs" />
