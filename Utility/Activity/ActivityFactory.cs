@@ -31,6 +31,7 @@ namespace CFlat.Utility
 
         public Activity createActivityFromJson(string jsonString)
         {
+            Logger.debug("ActivityFactory: start construct activity from json : {0}", jsonString);
             var o = JsonConvert.DeserializeObject<dynamic>(jsonString);
             string verb = o.verb;
 
@@ -49,6 +50,7 @@ namespace CFlat.Utility
             Activity activity = new Activity();
             activity.player = item.player;
             activity.playground = playgroundBase;
+            Logger.debug("ActivityFactory: activity constructed.");
             return activity;
         }
     }

@@ -16,7 +16,7 @@ namespace CFlat.Bridge.Cfp.PacketPresentation
         private int lineFlagCount { get; set; }
         public PacketDataUnitParser(Descriptor descriptor)
         {
-            
+            Logger.debug("PacketDataUnitParser: constructing...");
             this.descriptor = descriptor;
             IEnumerable<int> lineStarts = BytesHelper.indexOf(descriptor.des, 0, descriptor.desLength, PacketDataUnitLineFlag.lineStartsPattern);
             IEnumerable<int> lineEnds = BytesHelper.indexOf(descriptor.des, 0, descriptor.desLength, PacketDataUnitLineFlag.lineEndsPattern);
@@ -40,13 +40,16 @@ namespace CFlat.Bridge.Cfp.PacketPresentation
 
             lineFlagIndex = 0;
             lineFlagCount = lineEndsCount;
+            Logger.debug("PacketDataUnitParser: constructed");
         }
 
         public bool parseIfHasNext(out PacketDataUnitBase packetDataUnitBase)
         {
+            Logger.debug("PacketDataUnitParser: request next item.");
             packetDataUnitBase = null;
             if (lineFlagIndex == lineFlagCount)
             {
+                Logger.debug("PacketDataUnitParser: no more items.");
                 return false;
             }
             
@@ -63,7 +66,7 @@ namespace CFlat.Bridge.Cfp.PacketPresentation
             );
 
             lineFlagIndex++;
-
+            Logger.debug("PacketDataUnitParser: an item returned.");
             return true;
         }
 

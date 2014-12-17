@@ -39,8 +39,9 @@ namespace CFlat.Bridge.Tcp.Action
         public void connect()
         {
             clientSocket = new Socket(clientEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            
             iocpAsyncDelegate = new IocpAsyncDelegate(clientSocket.ConnectAsync);
+
+            clientSocket.Bind(clientEndPoint);
             iocpEventArgs.RemoteEndPoint = serverEndPoint;
             iocpOperation();
         }
