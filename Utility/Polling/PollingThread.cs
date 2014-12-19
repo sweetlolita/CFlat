@@ -10,9 +10,11 @@ namespace CFlat.Utility
     {
         private Thread thread { get; set; }
         private AutoResetEvent terminalEvent { get; set; }
+        private int pollingPeriod { get; set; }
         public Action<string> onError { get; set; }
-        public PollingThread()
+        public PollingThread(int pollingPeriod)
         {
+            this.pollingPeriod = pollingPeriod;
             terminalEvent = new AutoResetEvent(false);
         }
 
@@ -40,6 +42,10 @@ namespace CFlat.Utility
                 while (!terminalEvent.WaitOne(0))
                 {
                     onPolling();
+                    if(pollingPeriod > 0)
+                    {
+                        Thread.Sleep(pollingPeriod);
+                    }
                 }
             }
             catch (System.Exception ex)

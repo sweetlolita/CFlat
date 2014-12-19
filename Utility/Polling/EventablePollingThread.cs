@@ -9,7 +9,7 @@ namespace CFlat.Utility
     public abstract class EventablePollingThread : PollingThread
     {
         private AutoResetEvent notifyEvent { get; set; }
-        public EventablePollingThread(AutoResetEvent notifyEvent)
+        public EventablePollingThread(AutoResetEvent notifyEvent) : base(0)
         {
             this.notifyEvent = notifyEvent;
         }
